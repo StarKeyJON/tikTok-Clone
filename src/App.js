@@ -1,25 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Video from './Video';
+import database from './firebase';
 import './App.css';
 
+
 function App() {
+  const [videos, setVideos] = useState([])
+
+  useEffect(()=> {
+    database.collection('videos').onSnapshot(snapshot =>
+      setVideos(snapshot.docs.map(doc=>doc.data())
+      ))
+  }, [videos])
+
   return (
     // BEM 'convention'
     <div className="app">
-        <div className="app_videos">
+        <div className="app__videos">
+          {videos.map(({ url, channel, description, song, likes, messages, shares })=>(
             <Video 
-              url=""
-              channel=""
-              description=""
-              song=""
-              likes={419}
-              messages={17}
-              shares={3}
+              url={url}
+              channel={channel}
+              description={description}
+              song={song}
+              likes={likes}
+              messages={messages}
+              shares={shares}
             />
-            <Video />
-            <Video />
-            <Video />
-            <Video />
+          ))}
         </div>
     </div>
   );
